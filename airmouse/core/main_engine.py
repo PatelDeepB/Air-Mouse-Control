@@ -23,6 +23,7 @@ class MainEngine(BaseEngine):
         self.mapper = mapper
         self.dispatcher = dispatcher
         self._running = False
+        self._prev_gesture: Optional[str] = None
         
         # Initialize and load plugins
         self.plugin_manager = PluginManager()
@@ -84,7 +85,16 @@ class MainEngine(BaseEngine):
                         target_x = normalized_x * screen_width
                         target_y = normalized_y * screen_height
                         
-                        self.dispatcher.dispatch(action_name, target_x=target_x, target_y=target_y)
+                        # Edge-triggering logic: Continuous actions fire every frame.
+                        # Discrete actions (clicks, play/pause) fire ONLY when the gesture first begins.
+                        CONTINUOUS_ACTIONS = {"move", "drag", "scroll"}
+                        is_continuous = action_name in CONTINUOUS_ACTIONS
+                        is_new_gesture = gesture != self._prev_gesture
+                        
+                        if is_continuous or is_new_gesture:
+                            self.dispatcher.dispatch(action_name, target_x=target_x, target_y=target_y)
+                            
+                    self._prev_gesture = gesture
 
             # Calculate FPS
             current_time = time.time()
