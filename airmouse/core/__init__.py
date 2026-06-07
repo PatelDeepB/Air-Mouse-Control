@@ -7,6 +7,7 @@ from .engine import BaseEngine
 from .opencv_camera import OpenCVCamera
 from .mediapipe_tracker import MediaPipeTracker
 from .main_engine import MainEngine
+from .rule_recognizer import RuleRecognizer
 
 __all__ = [
     "BaseCamera",
@@ -17,5 +18,6 @@ __all__ = [
     "BaseEngine",
     "OpenCVCamera",
     "MediaPipeTracker",
-    "MainEngine"
+    "MainEngine",
+    "RuleRecognizer"
 ]
