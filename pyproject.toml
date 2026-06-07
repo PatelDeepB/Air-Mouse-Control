@@ -28,6 +28,9 @@ dev = [
 [project.scripts]
 airmouse = "airmouse.cli.main:main"
 
+[tool.hatch.build.targets.wheel]
+packages = ["airmouse"]
+
 [tool.ruff]
 line-length = 100
 target-version = "py312"

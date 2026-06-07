@@ -4,6 +4,9 @@ from .recognizer import BaseRecognizer
 from .mapper import BaseMapper
 from .dispatcher import BaseDispatcher
 from .engine import BaseEngine
+from .opencv_camera import OpenCVCamera
+from .mediapipe_tracker import MediaPipeTracker
+from .main_engine import MainEngine
 
 __all__ = [
     "BaseCamera",
@@ -11,5 +14,8 @@ __all__ = [
     "BaseRecognizer",
     "BaseMapper",
     "BaseDispatcher",
-    "BaseEngine"
+    "BaseEngine",
+    "OpenCVCamera",
+    "MediaPipeTracker",
+    "MainEngine"
 ]
