@@ -1,0 +1,33 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "airmouse"
+version = "0.1.0"
+description = "AI Gesture Control Framework"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "opencv-python>=4.9.0",
+    "mediapipe>=0.10.11",
+    "numpy>=1.26.0",
+    "pyautogui>=0.9.54",
+    "pynput>=1.7.6",
+    "pyyaml>=6.0.1",
+    "pydantic>=2.7.0"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "ruff>=0.4.0",
+    "mypy>=1.9.0",
+]
+
+[project.scripts]
+airmouse = "airmouse.cli.main:main"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
