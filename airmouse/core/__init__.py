@@ -8,6 +8,8 @@ from .opencv_camera import OpenCVCamera
 from .mediapipe_tracker import MediaPipeTracker
 from .main_engine import MainEngine
 from .rule_recognizer import RuleRecognizer
+from .config_mapper import ConfigMapper
+from .action_dispatcher import ActionDispatcher
 
 __all__ = [
     "BaseCamera",
@@ -19,5 +21,7 @@ __all__ = [
     "OpenCVCamera",
     "MediaPipeTracker",
     "MainEngine",
-    "RuleRecognizer"
+    "RuleRecognizer",
+    "ConfigMapper",
+    "ActionDispatcher"
 ]

@@ -5,6 +5,9 @@ from typing import Optional
 from airmouse.core.engine import BaseEngine
 from airmouse.core.camera import BaseCamera
 from airmouse.core.tracker import BaseTracker
+from airmouse.core.recognizer import BaseRecognizer
+from airmouse.core.mapper import BaseMapper
+from airmouse.core.dispatcher import BaseDispatcher
 from airmouse.utils.logger import setup_logger
 
 logger = setup_logger("engine")
@@ -12,9 +15,12 @@ logger = setup_logger("engine")
 class MainEngine(BaseEngine):
     """Main execution loop for AirMouse++."""
 
-    def __init__(self, camera: BaseCamera, tracker: BaseTracker):
+    def __init__(self, camera: BaseCamera, tracker: BaseTracker, recognizer: BaseRecognizer, mapper: BaseMapper, dispatcher: BaseDispatcher):
         self.camera = camera
         self.tracker = tracker
+        self.recognizer = recognizer
+        self.mapper = mapper
+        self.dispatcher = dispatcher
         self._running = False
 
     def start(self) -> None:
@@ -41,6 +47,25 @@ class MainEngine(BaseEngine):
                 if hasattr(self.tracker, "draw_landmarks"):
                     self.tracker.draw_landmarks(frame, tracking_data)
                 
+                # Recognize gesture
+                gesture = self.recognizer.recognize(tracking_data)
+                if gesture:
+                    cv2.putText(frame, f"Gesture: {gesture}", (10, 70), 
+                                cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
+                    
+                    # Map gesture to action
+                    action_name = self.mapper.get_action(gesture)
+                    if action_name:
+                        # Dispatch action
+                        # Some actions need coordinates (like mouse move), let's pass them
+                        # We use the wrist or index tip as the cursor coordinate.
+                        index_tip = tracking_data["landmarks"][8]
+                        screen_width, screen_height = 1920, 1080 # Placeholder for actual screen size
+                        target_x = index_tip["x"] * screen_width
+                        target_y = index_tip["y"] * screen_height
+                        
+                        self.dispatcher.dispatch(action_name, target_x=target_x, target_y=target_y)
+
             # Calculate FPS
             current_time = time.time()
             fps = 1 / (current_time - prev_time) if prev_time > 0 else 0
