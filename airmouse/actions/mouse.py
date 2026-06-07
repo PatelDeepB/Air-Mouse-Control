@@ -9,6 +9,7 @@ class MouseController:
         self.mouse = Controller()
         self.smoothing_factor = smoothing_factor
         self.prev_x, self.prev_y = self.mouse.position
+        self.last_click_time = 0.0
         
         # PyAutoGUI settings
         pyautogui.FAILSAFE = False

@@ -11,6 +11,7 @@ tracker:
 
 gestures:
   pinch: "left_click"
+  double_pinch: "double_click"
   fist: "play_pause"
   peace: "switch_next"
   point: "move" # Now uses index finger pointing to move 

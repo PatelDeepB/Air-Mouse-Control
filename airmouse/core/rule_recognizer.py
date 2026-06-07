@@ -7,7 +7,7 @@ from airmouse.core.recognizer import BaseRecognizer
 class RuleRecognizer(BaseRecognizer):
     """Rule-based gesture recognizer using MediaPipe landmarks."""
 
-    def __init__(self, confidence_threshold: float = 0.7, smoothing_window: int = 5):
+    def __init__(self, confidence_threshold: float = 0.6, smoothing_window: int = 3):
         self.confidence_threshold = confidence_threshold
         # Smoothing window stores the last N gestures
         self.history = deque(maxlen=smoothing_window)
@@ -54,8 +54,14 @@ class RuleRecognizer(BaseRecognizer):
 
         # Pinch detection: Thumb and Index close together
         thumb_index_dist = self._distance(landmarks[4], landmarks[8])
-        # Normalized distance threshold for pinch (relaxed to 0.08)
-        is_pinch = thumb_index_dist < 0.08 and not middle_extended and not ring_extended
+        thumb_middle_dist = self._distance(landmarks[4], landmarks[12])
+        
+        is_double_pinch = thumb_index_dist < 0.08 and thumb_middle_dist < 0.08 and not ring_extended and not pinky_extended
+        # Normalized distance threshold for single pinch
+        is_pinch = thumb_index_dist < 0.08 and not is_double_pinch and not middle_extended and not ring_extended
+
+        if is_double_pinch:
+            return "double_pinch"
 
         if is_pinch:
             return "pinch"
