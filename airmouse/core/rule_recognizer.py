@@ -75,7 +75,7 @@ class RuleRecognizer(BaseRecognizer):
         if extended_count <= 1 and not thumb_extended and not index_extended:
             return "fist"
             
-        if index_extended and middle_extended and not ring_extended and not pinky_extended:
+        if index_extended and middle_extended and not thumb_extended and not ring_extended and not pinky_extended:
             return "peace"
 
         if thumb_extended and not index_extended and not middle_extended and not ring_extended and not pinky_extended:
