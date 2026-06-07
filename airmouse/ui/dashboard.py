@@ -70,17 +70,44 @@ class App(ctk.CTk):
     def show_plugins(self):
         self.header_label.configure(text="Installed Plugins")
 
+    def _run_engine_thread(self):
+        from airmouse.core.opencv_camera import OpenCVCamera
+        from airmouse.core.mediapipe_tracker import MediaPipeTracker
+        from airmouse.core.rule_recognizer import RuleRecognizer
+        from airmouse.core.config_mapper import ConfigMapper
+        from airmouse.core.action_dispatcher import ActionDispatcher
+        from airmouse.core.main_engine import MainEngine
+        from airmouse.actions.mouse import MouseController
+        from airmouse.actions.media import MediaController
+        from airmouse.actions.system import SystemController
+        from airmouse.actions.windows import WindowController
+        
+        camera = OpenCVCamera()
+        tracker = MediaPipeTracker()
+        recognizer = RuleRecognizer()
+        mapper = ConfigMapper()
+        dispatcher = ActionDispatcher()
+        
+        dispatcher.register_controller(MouseController())
+        dispatcher.register_controller(MediaController())
+        dispatcher.register_controller(SystemController())
+        dispatcher.register_controller(WindowController())
+        
+        self.engine = MainEngine(camera, tracker, recognizer, mapper, dispatcher)
+        self.engine.start()
+
     def start_engine(self):
         logger.info("GUI requested engine start.")
-        # We would start the engine in a separate thread to avoid blocking the GUI
         self.start_engine_btn.configure(state="disabled")
         self.stop_engine_btn.configure(state="normal")
         self.header_label.configure(text="System Status: RUNNING", text_color="green")
-        # Threading logic to run `airmouse start` equivalent
+        self.engine_thread = threading.Thread(target=self._run_engine_thread, daemon=True)
+        self.engine_thread.start()
 
     def stop_engine(self):
         logger.info("GUI requested engine stop.")
         self.start_engine_btn.configure(state="normal")
         self.stop_engine_btn.configure(state="disabled")
         self.header_label.configure(text="System Status: Stopped", text_color="red")
-        # Logic to stop the engine
+        if hasattr(self, 'engine') and self.engine:
+            self.engine.stop()

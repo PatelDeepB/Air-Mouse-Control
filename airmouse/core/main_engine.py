@@ -62,13 +62,27 @@ class MainEngine(BaseEngine):
                     # Map gesture to action
                     action_name = self.mapper.get_action(gesture)
                     if action_name:
+                        logger.info(f"Recognized gesture: {gesture} -> mapped to action: {action_name}")
                         # Dispatch action
                         # Some actions need coordinates (like mouse move), let's pass them
                         # We use the wrist or index tip as the cursor coordinate.
                         index_tip = tracking_data["landmarks"][8]
-                        screen_width, screen_height = 1920, 1080 # Placeholder for actual screen size
-                        target_x = index_tip["x"] * screen_width
-                        target_y = index_tip["y"] * screen_height
+                        # Use pyautogui to get actual screen size
+                        import pyautogui
+                        screen_width, screen_height = pyautogui.size()
+                        
+                        # Active area bounding box: only the middle 60% of the camera maps to the full screen.
+                        # This prevents the user from having to stretch their arm to the edges of the camera view.
+                        margin_x, margin_y = 0.2, 0.2
+                        
+                        clamped_x = max(margin_x, min(1.0 - margin_x, index_tip["x"]))
+                        clamped_y = max(margin_y, min(1.0 - margin_y, index_tip["y"]))
+                        
+                        normalized_x = (clamped_x - margin_x) / (1.0 - 2 * margin_x)
+                        normalized_y = (clamped_y - margin_y) / (1.0 - 2 * margin_y)
+                        
+                        target_x = normalized_x * screen_width
+                        target_y = normalized_y * screen_height
                         
                         self.dispatcher.dispatch(action_name, target_x=target_x, target_y=target_y)
 

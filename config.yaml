@@ -13,4 +13,4 @@ gestures:
   pinch: "left_click"
   fist: "play_pause"
   peace: "switch_next"
-  open_palm: "move" # Assuming tracking is based on index tip 
+  point: "move" # Now uses index finger pointing to move 

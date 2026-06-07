@@ -24,10 +24,21 @@ class ActionDispatcher(BaseDispatcher):
                     logger.info(f"Registered action: {attr_name}")
 
     def dispatch(self, action_name: str, **kwargs) -> bool:
+        import inspect
         if action_name in self.action_registry:
             func = self.action_registry[action_name]
             try:
-                func(**kwargs)
+                # Only pass kwargs that the function accepts
+                sig = inspect.signature(func)
+                # If the function accepts **kwargs, we can pass everything
+                accepts_kwargs = any(p.kind == inspect.Parameter.VAR_KEYWORD for p in sig.parameters.values())
+                
+                if accepts_kwargs:
+                    func(**kwargs)
+                else:
+                    valid_kwargs = {k: v for k, v in kwargs.items() if k in sig.parameters}
+                    func(**valid_kwargs)
+                    
                 return True
             except Exception as e:
                 logger.error(f"Error executing action {action_name}: {e}")

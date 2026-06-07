@@ -5,7 +5,7 @@ import time
 class MouseController:
     """Controls mouse movement, clicking, and scrolling."""
 
-    def __init__(self, smoothing_factor: float = 0.5):
+    def __init__(self, smoothing_factor: float = 0.7):
         self.mouse = Controller()
         self.smoothing_factor = smoothing_factor
         self.prev_x, self.prev_y = self.mouse.position
@@ -23,13 +23,14 @@ class MouseController:
         self.mouse.position = (smooth_x, smooth_y)
         self.prev_x, self.prev_y = smooth_x, smooth_y
 
-    def click(self, button: str = "left") -> None:
-        if button == "left":
-            self.mouse.click(Button.left)
-        elif button == "right":
-            self.mouse.click(Button.right)
-        elif button == "middle":
-            self.mouse.click(Button.middle)
+    def left_click(self) -> None:
+        self.mouse.click(Button.left)
+        
+    def right_click(self) -> None:
+        self.mouse.click(Button.right)
+        
+    def middle_click(self) -> None:
+        self.mouse.click(Button.middle)
 
     def double_click(self) -> None:
         self.mouse.click(Button.left, 2)

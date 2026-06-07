@@ -54,11 +54,14 @@ class RuleRecognizer(BaseRecognizer):
 
         # Pinch detection: Thumb and Index close together
         thumb_index_dist = self._distance(landmarks[4], landmarks[8])
-        # Normalized distance threshold for pinch
-        is_pinch = thumb_index_dist < 0.05 and not middle_extended and not ring_extended
+        # Normalized distance threshold for pinch (relaxed to 0.08)
+        is_pinch = thumb_index_dist < 0.08 and not middle_extended and not ring_extended
 
         if is_pinch:
             return "pinch"
+
+        if index_extended and not middle_extended and not ring_extended and not pinky_extended:
+            return "point"
 
         if extended_count == 5:
             return "open_palm"
