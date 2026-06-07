@@ -7,7 +7,7 @@ name = "airmouse"
 version = "0.1.0"
 description = "AI Gesture Control Framework"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.10"
 dependencies = [
     "opencv-python>=4.9.0",
     "mediapipe>=0.10.11",
