@@ -8,6 +8,7 @@ from airmouse.core.tracker import BaseTracker
 from airmouse.core.recognizer import BaseRecognizer
 from airmouse.core.mapper import BaseMapper
 from airmouse.core.dispatcher import BaseDispatcher
+from airmouse.core.plugin_manager import PluginManager
 from airmouse.utils.logger import setup_logger
 
 logger = setup_logger("engine")
@@ -22,6 +23,11 @@ class MainEngine(BaseEngine):
         self.mapper = mapper
         self.dispatcher = dispatcher
         self._running = False
+        
+        # Initialize and load plugins
+        self.plugin_manager = PluginManager()
+        self.plugin_manager.load_plugins()
+        self.plugin_manager.register_to_dispatcher(self.dispatcher)
 
     def start(self) -> None:
         if not self.camera.start():

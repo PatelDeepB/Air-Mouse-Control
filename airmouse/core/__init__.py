@@ -10,6 +10,7 @@ from .main_engine import MainEngine
 from .rule_recognizer import RuleRecognizer
 from .config_mapper import ConfigMapper
 from .action_dispatcher import ActionDispatcher
+from .plugin_manager import PluginManager, gesture
 
 __all__ = [
     "BaseCamera",
@@ -23,5 +24,7 @@ __all__ = [
     "MainEngine",
     "RuleRecognizer",
     "ConfigMapper",
-    "ActionDispatcher"
+    "ActionDispatcher",
+    "PluginManager",
+    "gesture"
 ]
