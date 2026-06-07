@@ -1,0 +1,16 @@
+camera:
+  device_id: 0
+  width: 640
+  height: 480
+  fps: 30
+
+tracker:
+  min_detection_confidence: 0.7
+  min_tracking_confidence: 0.5
+  max_hands: 1
+
+gestures:
+  pinch: "left_click"
+  fist: "play_pause"
+  peace: "switch_next"
+  open_palm: "move" # Assuming tracking is based on index tip 
