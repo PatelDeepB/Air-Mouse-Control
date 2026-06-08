@@ -22,7 +22,7 @@ class Settings(BaseModel):
     gestures: Dict[str, str] = {
         "point": "move",
         "pinch": "left_click_drag",
-        "middle_pinch": "right_click",
+        "shaka": "right_click",
         "double_pinch": "double_click",
         "thumb_up": "scroll_up",
         "thumb_down": "scroll_down"

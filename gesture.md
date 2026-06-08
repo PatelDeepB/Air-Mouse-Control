@@ -15,8 +15,8 @@ This document explains the default gestures configured for AirMouse++ and how to
      2. Bring your thumb and index finger together to **pinch**.
    - **What it does:** Triggers a standard Left Mouse Click. **Hold the pinch** to drag files or highlight text.
 
-3. **Right Click (Middle Pinch)**
-   - **How to perform:** Bring your **thumb and middle finger** together.
+3. **Right Click (Shaka Gesture)**
+   - **How to perform:** Make a fist, then stick your **thumb and pinky finger** straight out (like the "Call Me" or "Surf's Up" hand sign).
    - **What it does:** Triggers a standard Right Mouse Click.
 
 4. **Double Click (3-Finger Pinch)**

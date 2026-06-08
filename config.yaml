@@ -12,7 +12,7 @@ tracker:
 gestures:
   point: "move" # Index finger to move
   pinch: "left_click_drag" # Hold pinch to drag
-  middle_pinch: "right_click" # Thumb + middle finger
+  shaka: "right_click" # Thumb and pinky extended
   double_pinch: "double_click"
   thumb_up: "scroll_up" # Thumbs up to scroll up
   thumb_down: "scroll_down" # Thumbs down to scroll down

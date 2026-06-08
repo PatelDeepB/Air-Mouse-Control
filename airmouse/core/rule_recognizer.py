@@ -59,10 +59,6 @@ class RuleRecognizer(BaseRecognizer):
         is_double_pinch = thumb_index_dist < 0.08 and thumb_middle_dist < 0.08 and not ring_extended and not pinky_extended
         # Normalized distance threshold for single pinch
         is_pinch = thumb_index_dist < 0.08 and not is_double_pinch and not middle_extended and not ring_extended
-        
-        # The middle finger pinch is often harder for the camera to see because the index finger blocks it.
-        # We use a larger distance threshold (0.12 instead of 0.08).
-        is_middle_pinch = thumb_middle_dist < 0.12 and not is_double_pinch and not index_extended and not ring_extended
 
         if is_double_pinch:
             return "double_pinch"
@@ -70,8 +66,8 @@ class RuleRecognizer(BaseRecognizer):
         if is_pinch:
             return "pinch"
             
-        if is_middle_pinch:
-            return "middle_pinch"
+        if thumb_extended and pinky_extended and not index_extended and not middle_extended and not ring_extended:
+            return "shaka"
 
         if index_extended and not thumb_extended and not middle_extended and not ring_extended and not pinky_extended:
             return "point"
