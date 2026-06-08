@@ -65,6 +65,9 @@ class RuleRecognizer(BaseRecognizer):
 
         if is_pinch:
             return "pinch"
+            
+        if thumb_extended and pinky_extended and not index_extended and not middle_extended and not ring_extended:
+            return "shaka"
 
         if index_extended and not thumb_extended and not middle_extended and not ring_extended and not pinky_extended:
             return "point"

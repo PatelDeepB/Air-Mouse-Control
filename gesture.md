@@ -9,23 +9,27 @@ This document explains the default gestures configured for AirMouse++ and how to
    - **What it does:** Moves the laptop's mouse cursor.
    - **Tip:** The cursor only moves when your thumb is tucked in. This acts as a "clutch".
 
-2. **Left Click (2-Finger Pinch)**
+2. **Left Click / Drag (2-Finger Pinch)**
    - **How to perform:** 
      1. Pop your thumb out (this freezes the mouse perfectly in place so you don't miss your target).
      2. Bring your thumb and index finger together to **pinch**.
-   - **What it does:** Triggers a standard Left Mouse Click.
+   - **What it does:** Triggers a standard Left Mouse Click. **Hold the pinch** to drag files or highlight text.
 
-3. **Double Click (3-Finger Pinch)**
+3. **Right Click (Shaka Gesture)**
+   - **How to perform:** Make a fist, then stick your **thumb and pinky finger** straight out (like the "Call Me" or "Surf's Up" hand sign).
+   - **What it does:** Triggers a standard Right Mouse Click.
+
+4. **Double Click (3-Finger Pinch)**
    - **How to perform:** Bring your **thumb, index finger, and middle finger** together all at once (like picking up a pinch of salt).
    - **What it does:** Triggers a precise OS-level Double Click instantly.
 
-4. **Play / Pause Media (Fist Gesture)**
-   - **How to perform:** Close all your fingers to make a **fist**.
-   - **What it does:** Plays or pauses your current music/video playing in the background (like Spotify or YouTube).
+5. **Scroll Up (Thumbs Up)**
+   - **How to perform:** Make a fist and stick your **thumb straight UP**.
+   - **What it does:** Continuously scrolls the screen UP.
 
-4. **Scroll Up / Down (Peace Gesture)**
-   - **How to perform:** Hold up your **index and middle finger** in a "Peace" / "V" sign. Keep the ring and pinky fingers closed.
-   - **What it does:** Scrolls the screen. Move your hand UP to scroll up, and DOWN to scroll down.
+6. **Scroll Down (Thumbs Down)**
+   - **How to perform:** Make a fist and point your **thumb straight DOWN**.
+   - **What it does:** Continuously scrolls the screen DOWN.
 
 ## Changing Mappings
-If you want to swap what these gestures do, just open `config.yaml` in the root folder and change the mapping! For example, you can map `peace` to `middle_click` or `mute`.
+If you want to swap what these gestures do, just open `config.yaml` in the root folder and change the mapping!

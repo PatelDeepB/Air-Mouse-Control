@@ -1,68 +1,91 @@
 import pyautogui
 from pynput.mouse import Controller, Button
 import time
+from airmouse.utils.filters import OneEuroFilter
 
 class MouseController:
-    """Controls mouse movement, clicking, and scrolling."""
+    """Controls mouse movement, clicking, and scrolling using a State Machine."""
 
-    def __init__(self, smoothing_factor: float = 0.7):
+    def __init__(self):
         self.mouse = Controller()
-        self.smoothing_factor = smoothing_factor
-        self.prev_x, self.prev_y = self.mouse.position
         self.last_click_time = 0.0
+        
+        self.filter_x = None
+        self.filter_y = None
+        
+        # State variables
+        self.is_left_pressed = False
+        self.freeze_until = 0.0
+        self.scroll_anchor = None
         
         # PyAutoGUI settings
         pyautogui.FAILSAFE = False
         pyautogui.PAUSE = 0.0
 
-    def move(self, target_x: float, target_y: float) -> None:
-        """Moves the mouse with smoothing applied."""
-        # Exponential moving average for smoothing
-        smooth_x = self.prev_x + (target_x - self.prev_x) * self.smoothing_factor
-        smooth_y = self.prev_y + (target_y - self.prev_y) * self.smoothing_factor
-
-        self.mouse.position = (smooth_x, smooth_y)
-        self.prev_x, self.prev_y = smooth_x, smooth_y
-
-    def left_click(self) -> None:
-        self.mouse.click(Button.left)
+    def update_position(self, target_x: float, target_y: float) -> None:
+        """Called every frame to update cursor absolutely, utilizing OneEuroFilter for zero jitter."""
+        t = time.time()
         
-    def right_click(self) -> None:
-        self.mouse.click(Button.right)
-        
-    def middle_click(self) -> None:
-        self.mouse.click(Button.middle)
-
-    def double_click(self) -> None:
-        self.mouse.click(Button.left, 2)
-
-    def scroll(self, target_y: float = 0.0, is_new_gesture: bool = False, **kwargs) -> None:
-        """Scrolls the mouse vertically based on hand movement."""
-        if is_new_gesture or not hasattr(self, 'prev_scroll_y'):
-            self.prev_scroll_y = target_y
+        # Click stabilization: Don't move the mouse if we are in a click-freeze period.
+        if t < self.freeze_until:
+            # Re-initialize filters so it doesn't jump wildly after unfreezing
+            self.filter_x = None
+            self.filter_y = None
             return
             
-        delta = target_y - self.prev_scroll_y
-        
-        # Threshold to avoid jitter. target_y is in screen coordinates (pixels).
-        sensitivity = 30.0
+        if self.filter_x is None:
+            # First frame of movement (or after unfreezing)
+            # Use strict min_cutoff to kill jitter at rest, and small beta to allow speed
+            self.filter_x = OneEuroFilter(t, target_x, min_cutoff=0.01, beta=0.005)
+            self.filter_y = OneEuroFilter(t, target_y, min_cutoff=0.01, beta=0.005)
+            self.mouse.position = (target_x, target_y)
+            return
+
+        # Apply 1 Euro Filter to absolute coordinates
+        smooth_x = self.filter_x(t, target_x)
+        smooth_y = self.filter_y(t, target_y)
+
+        self.mouse.position = (smooth_x, smooth_y)
+
+    def set_left_click(self, pressed: bool) -> None:
+        if pressed and not self.is_left_pressed:
+            self._stabilize_click()
+            self.mouse.press(Button.left)
+            self.is_left_pressed = True
+        elif not pressed and self.is_left_pressed:
+            self.mouse.release(Button.left)
+            self.is_left_pressed = False
+
+    def trigger_right_click(self) -> None:
+        self._stabilize_click()
+        self.mouse.click(Button.right)
+
+    def trigger_double_click(self) -> None:
+        self._stabilize_click()
+        self.mouse.click(Button.left, 2)
+
+    def update_scroll(self, target_y: float, is_start: bool) -> None:
+        """Scrolls the mouse vertically based on y position (legacy peace-sign scroll)."""
+        if is_start or self.scroll_anchor is None:
+            self.scroll_anchor = target_y
+            return
+            
+        delta = target_y - self.scroll_anchor
+        sensitivity = 40.0
         
         if abs(delta) > sensitivity:
-            # delta < 0 means hand moved UP. pynput scroll UP is positive.
             clicks = -int(delta / sensitivity)
             self.mouse.scroll(0, clicks)
-            
-            # Reset reference point
-            self.prev_scroll_y = target_y
+            self.scroll_anchor = target_y
 
-    def drag(self, start_x: float, start_y: float, end_x: float, end_y: float) -> None:
-        # Move to start
-        self.mouse.position = (start_x, start_y)
-        time.sleep(0.05)
-        self.mouse.press(Button.left)
-        time.sleep(0.05)
-        
-        # Move to end
-        self.move(end_x, end_y)
-        time.sleep(0.05)
-        self.mouse.release(Button.left)
+    def scroll_up(self, **kwargs) -> None:
+        """Scrolls the mouse up continuously."""
+        self.mouse.scroll(0, 1)
+
+    def scroll_down(self, **kwargs) -> None:
+        """Scrolls the mouse down continuously."""
+        self.mouse.scroll(0, -1)
+
+    def _stabilize_click(self) -> None:
+        """Freezes the mouse for 0.4 seconds to prevent the cursor from slipping while pinching."""
+        self.freeze_until = time.time() + 0.4

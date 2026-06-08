@@ -20,11 +20,12 @@ class Settings(BaseModel):
     camera: CameraSettings = CameraSettings()
     recognizer: RecognizerSettings = RecognizerSettings()
     gestures: Dict[str, str] = {
-        "pinch": "left_click",
+        "point": "move",
+        "pinch": "left_click_drag",
+        "shaka": "right_click",
         "double_pinch": "double_click",
-        "fist": "play_pause",
-        "peace": "scroll",
-        "point": "move"
+        "thumb_up": "scroll_up",
+        "thumb_down": "scroll_down"
     }
 
 def load_settings(config_path: str) -> Settings:
