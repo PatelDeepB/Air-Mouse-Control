@@ -76,8 +76,9 @@ class MainEngine(BaseEngine):
                         import pyautogui
                         screen_width, screen_height = pyautogui.size()
                         
-                        # Active area bounding box: only the middle 60% of the camera maps to the full screen.
-                        margin_x, margin_y = 0.2, 0.2
+                        # Active area bounding box: only the middle area of the camera maps to the full screen.
+                        margin_x = self.mapper.settings.camera.comfort_margin_x
+                        margin_y = self.mapper.settings.camera.comfort_margin_y
                         
                         clamped_x = max(margin_x, min(1.0 - margin_x, index_tip["x"]))
                         clamped_y = max(margin_y, min(1.0 - margin_y, index_tip["y"]))

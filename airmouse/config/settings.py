@@ -11,6 +11,8 @@ class CameraSettings(BaseModel):
     width: int = 640
     height: int = 480
     fps: int = 30
+    comfort_margin_x: float = 0.2
+    comfort_margin_y: float = 0.2
 
 class RecognizerSettings(BaseModel):
     confidence_threshold: float = 0.7

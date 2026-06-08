@@ -3,6 +3,8 @@ camera:
   width: 640
   height: 480
   fps: 30
+  comfort_margin_x: 0.2  # Increase to reduce horizontal arm movement
+  comfort_margin_y: 0.2  # Increase to reduce vertical arm movement
 
 tracker:
   min_detection_confidence: 0.7
