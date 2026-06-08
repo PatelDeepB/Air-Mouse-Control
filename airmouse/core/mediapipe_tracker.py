@@ -1,7 +1,7 @@
 import cv2
 import mediapipe as mp
 import numpy as np
-from typing import Any, Dict, Optional, List
+from typing import Any, Dict, Optional
 
 from airmouse.core.tracker import BaseTracker
 

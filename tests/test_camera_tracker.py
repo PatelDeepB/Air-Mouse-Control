@@ -1,10 +1,8 @@
 import numpy as np
-import pytest
 from unittest.mock import MagicMock, patch
 
 from airmouse.core.opencv_camera import OpenCVCamera
 from airmouse.core.mediapipe_tracker import MediaPipeTracker
-from airmouse.core.main_engine import MainEngine
 
 def test_camera_initialization():
     camera = OpenCVCamera()

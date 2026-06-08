@@ -1,5 +1,4 @@
-import pytest
-from airmouse.config.settings import CameraSettings, RecognizerSettings, Settings
+from airmouse.config.settings import Settings
 
 def test_settings_defaults():
     settings = Settings()

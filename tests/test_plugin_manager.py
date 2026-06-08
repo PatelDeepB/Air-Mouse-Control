@@ -1,6 +1,3 @@
-import os
-import shutil
-from pathlib import Path
 from airmouse.core.plugin_manager import PluginManager, _PLUGIN_REGISTRY, gesture
 from airmouse.core.action_dispatcher import ActionDispatcher
 

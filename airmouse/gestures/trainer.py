@@ -1,7 +1,7 @@
 import os
 import joblib
 import numpy as np
-from typing import List, Dict, Tuple, Any
+from typing import List, Dict
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler

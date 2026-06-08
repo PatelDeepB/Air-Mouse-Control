@@ -1,5 +1,4 @@
 import os
-import numpy as np
 from airmouse.gestures.trainer import GestureTrainer
 from airmouse.gestures.classifier import MLRecognizer
 
