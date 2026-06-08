@@ -72,7 +72,7 @@ def run_trainer(args=None):
                     cv2.putText(display_frame, f"Recording '{gesture}': {frames_collected}/{frames_per_gesture}", 
                                 (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
                 else:
-                    cv2.putText(display_frame, f"No hand detected! Show your hand.", 
+                    cv2.putText(display_frame, "No hand detected! Show your hand.", 
                                 (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
                                 
                 cv2.imshow("AirMouse++ Trainer", display_frame)
