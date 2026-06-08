@@ -62,18 +62,21 @@ class MainEngine(BaseEngine):
                     
                     # Map gesture to action
                     action_name = self.mapper.get_action(gesture)
+                    prev_action_name = self.mapper.get_action(self._prev_gesture) if self._prev_gesture else None
+                    
+                    # Release drag if we were dragging but now we switched actions
+                    if prev_action_name == "left_click_drag" and action_name != "left_click_drag":
+                        self.dispatcher.dispatch("set_left_click", pressed=False)
+
                     if action_name:
-                        logger.info(f"Recognized gesture: {gesture} -> mapped to action: {action_name}")
-                        # Dispatch action
-                        # Some actions need coordinates (like mouse move), let's pass them
-                        # We use the wrist or index tip as the cursor coordinate.
+                        # Some actions need coordinates (like mouse move)
+                        # We use the index tip as the cursor coordinate.
                         index_tip = tracking_data["landmarks"][8]
                         # Use pyautogui to get actual screen size
                         import pyautogui
                         screen_width, screen_height = pyautogui.size()
                         
                         # Active area bounding box: only the middle 60% of the camera maps to the full screen.
-                        # This prevents the user from having to stretch their arm to the edges of the camera view.
                         margin_x, margin_y = 0.2, 0.2
                         
                         clamped_x = max(margin_x, min(1.0 - margin_x, index_tip["x"]))
@@ -85,14 +88,28 @@ class MainEngine(BaseEngine):
                         target_x = normalized_x * screen_width
                         target_y = normalized_y * screen_height
                         
-                        # Edge-triggering logic: Continuous actions fire every frame.
-                        # Discrete actions (clicks, play/pause) fire ONLY when the gesture first begins.
-                        CONTINUOUS_ACTIONS = {"move", "drag", "scroll"}
-                        is_continuous = action_name in CONTINUOUS_ACTIONS
-                        is_new_gesture = gesture != self._prev_gesture
+                        is_new_action = action_name != prev_action_name
                         
-                        if is_continuous or is_new_gesture:
-                            self.dispatcher.dispatch(action_name, target_x=target_x, target_y=target_y, is_new_gesture=is_new_gesture)
+                        if action_name == "move":
+                            self.dispatcher.dispatch("update_position", target_x=target_x, target_y=target_y)
+                        elif action_name == "left_click_drag":
+                            if is_new_action:
+                                self.dispatcher.dispatch("set_left_click", pressed=True)
+                            self.dispatcher.dispatch("update_position", target_x=target_x, target_y=target_y)
+                        elif action_name == "scroll":
+                            self.dispatcher.dispatch("update_scroll", target_y=target_y, is_start=is_new_action)
+                        elif action_name == "scroll_up":
+                            self.dispatcher.dispatch("scroll_up")
+                        elif action_name == "scroll_down":
+                            self.dispatcher.dispatch("scroll_down")
+                        elif is_new_action: # One-off discrete actions
+                            if action_name == "right_click":
+                                self.dispatcher.dispatch("trigger_right_click")
+                            elif action_name == "double_click":
+                                self.dispatcher.dispatch("trigger_double_click")
+                            else:
+                                # For any other plugin actions
+                                self.dispatcher.dispatch(action_name, target_x=target_x, target_y=target_y, is_new_gesture=is_new_action)
                             
                     self._prev_gesture = gesture
 
