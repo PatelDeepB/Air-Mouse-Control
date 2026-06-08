@@ -11,7 +11,7 @@ def start_engine(args):
     # Lazy import to avoid loading heavy CV modules for simple CLI commands
     from airmouse.core.opencv_camera import OpenCVCamera
     from airmouse.core.mediapipe_tracker import MediaPipeTracker
-    from airmouse.core.rule_recognizer import RuleRecognizer
+    from airmouse.core.ml_recognizer import MLRecognizer
     from airmouse.core.config_mapper import ConfigMapper
     from airmouse.core.action_dispatcher import ActionDispatcher
     from airmouse.core.main_engine import MainEngine
@@ -23,7 +23,7 @@ def start_engine(args):
     # Initialize Core Components
     camera = OpenCVCamera()
     tracker = MediaPipeTracker()
-    recognizer = RuleRecognizer()
+    recognizer = MLRecognizer()
     mapper = ConfigMapper()
     dispatcher = ActionDispatcher()
     
@@ -60,6 +60,11 @@ def main():
     # Command: ui
     ui_parser = subparsers.add_parser("ui", help="Open the desktop dashboard")
     ui_parser.set_defaults(func=start_gui)
+
+    # Command: train
+    train_parser = subparsers.add_parser("train", help="Run the interactive ML gesture calibration")
+    from airmouse.cli.train_cli import run_trainer
+    train_parser.set_defaults(func=run_trainer)
 
     args = parser.parse_args()
 

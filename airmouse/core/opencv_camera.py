@@ -47,7 +47,8 @@ class OpenCVCamera(BaseCamera):
                 with self._lock:
                     self._frame = frame
             else:
-                logger.warning("Failed to grab frame.")
+                import time
+                time.sleep(0.1)
 
     def stop(self) -> None:
         self._running = False
