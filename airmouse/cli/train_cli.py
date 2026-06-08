@@ -49,6 +49,8 @@ def run_trainer(args=None):
                         cv2.imshow("AirMouse++ Trainer", display_frame)
                         if cv2.waitKey(1) & 0xFF == ord('q'):
                             return
+                    else:
+                        time.sleep(0.01)
                 
             print(f"--- RECORDING '{gesture}' NOW ---")
             
@@ -60,7 +62,7 @@ def run_trainer(args=None):
                     continue
                     
                 display_frame = frame.copy()
-                tracking_data = tracker.track(frame)
+                tracking_data = tracker.process(frame)
                 
                 if tracking_data and "landmarks" in tracking_data:
                     trainer.add_sample(tracking_data["landmarks"], gesture)

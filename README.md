@@ -10,8 +10,9 @@ AirMouse++ is an open-source, cross-platform gesture control framework that tran
 ## 🚀 Features
 
 - **Cross-Platform:** Works on Windows, macOS, and Linux.
-- **Core OS Control:** Move your mouse, click, scroll, switch windows, adjust volume, and control media playback using just your hands.
-- **Rule-Based & ML Recognition:** Ships with highly optimized heuristics for common gestures (pinch, fist, peace sign) and includes a machine learning trainer (KNN) to record and classify custom gestures.
+- **Core OS Control:** Move your mouse, drag-and-drop, right-click, double-click, and scroll using just your hands.
+- **Zero-Jitter UX:** Utilizes a highly tuned One Euro Filter on absolute coordinates and implements Click Stabilization (freezing the cursor when clicking) to eliminate misclicks.
+- **Machine Learning Trainer:** Ships with a built-in CLI trainer (`airmouse train`) to record your own hand shape and train a custom K-Nearest Neighbors ML classifier for 100% accurate, personalized gesture recognition.
 - **Plugin System:** Extend the framework by dropping Python scripts into the `plugins/` directory and decorating functions with `@gesture("action_name")`.
 - **Beautiful UI:** Comes with a CLI (`airmouse`) and a dark-themed CustomTkinter Desktop Dashboard.
 
@@ -46,10 +47,17 @@ airmouse ui
 AirMouse++ uses a `config.yaml` file to map recognized gestures to actual OS actions. Create a `config.yaml` in the project root:
 
 ```yaml
+camera:
+  comfort_margin_x: 0.2  # Increase to 0.3 or 0.4 to reduce horizontal arm movement
+  comfort_margin_y: 0.2  # Increase to reduce vertical arm movement
+
 gestures:
-  pinch: "left_click"
-  fist: "play_pause"
-  peace: "switch_next"
+  point: "move" # Index finger to move
+  pinch: "left_click_drag" # Hold pinch to drag
+  shaka: "right_click" # Thumb and pinky extended
+  double_pinch: "double_click"
+  thumb_up: "scroll_up" # Thumbs up to scroll up
+  thumb_down: "scroll_down" # Thumbs down to scroll down
 ```
 
 ## 🔌 Writing Plugins
@@ -67,6 +75,9 @@ Then map a gesture to `open_browser` in your `config.yaml`.
 
 ## 🤝 Contributing
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**. Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+
+## 🧪 Experimental: Custom ML Gestures
+We are currently actively developing the `airmouse train` CLI command. This feature will soon allow users to calculate joint angles and train highly robust custom ML models for personalized gestures. Stay tuned!
 
 ## 📄 License
 Distributed under the MIT License. See `LICENSE` for more information.
