@@ -36,9 +36,24 @@ class MouseController:
     def double_click(self) -> None:
         self.mouse.click(Button.left, 2)
 
-    def scroll(self, clicks: int) -> None:
-        """Scrolls the mouse vertically. Positive is up, negative is down."""
-        self.mouse.scroll(0, clicks)
+    def scroll(self, target_y: float = 0.0, is_new_gesture: bool = False, **kwargs) -> None:
+        """Scrolls the mouse vertically based on hand movement."""
+        if is_new_gesture or not hasattr(self, 'prev_scroll_y'):
+            self.prev_scroll_y = target_y
+            return
+            
+        delta = target_y - self.prev_scroll_y
+        
+        # Threshold to avoid jitter. target_y is in screen coordinates (pixels).
+        sensitivity = 30.0
+        
+        if abs(delta) > sensitivity:
+            # delta < 0 means hand moved UP. pynput scroll UP is positive.
+            clicks = -int(delta / sensitivity)
+            self.mouse.scroll(0, clicks)
+            
+            # Reset reference point
+            self.prev_scroll_y = target_y
 
     def drag(self, start_x: float, start_y: float, end_x: float, end_y: float) -> None:
         # Move to start

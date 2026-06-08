@@ -92,7 +92,7 @@ class MainEngine(BaseEngine):
                         is_new_gesture = gesture != self._prev_gesture
                         
                         if is_continuous or is_new_gesture:
-                            self.dispatcher.dispatch(action_name, target_x=target_x, target_y=target_y)
+                            self.dispatcher.dispatch(action_name, target_x=target_x, target_y=target_y, is_new_gesture=is_new_gesture)
                             
                     self._prev_gesture = gesture
 

@@ -2,6 +2,9 @@ from pydantic import BaseModel
 import yaml
 from typing import Dict
 from pathlib import Path
+from airmouse.utils.logger import setup_logger
+
+logger = setup_logger("settings")
 
 class CameraSettings(BaseModel):
     index: int = 0
@@ -16,7 +19,13 @@ class RecognizerSettings(BaseModel):
 class Settings(BaseModel):
     camera: CameraSettings = CameraSettings()
     recognizer: RecognizerSettings = RecognizerSettings()
-    gestures: Dict[str, str] = {}  # gesture_name -> action_name
+    gestures: Dict[str, str] = {
+        "pinch": "left_click",
+        "double_pinch": "double_click",
+        "fist": "play_pause",
+        "peace": "scroll",
+        "point": "move"
+    }
 
 def load_settings(config_path: str) -> Settings:
     """Loads configuration from a YAML file.
@@ -29,8 +38,13 @@ def load_settings(config_path: str) -> Settings:
     """
     path = Path(config_path)
     if not path.exists():
+        logger.warning(f"Config file not found at {path.absolute()}. Using default settings.")
         return Settings()
     
-    with open(path, 'r', encoding='utf-8') as f:
-        data = yaml.safe_load(f) or {}
-    return Settings(**data)
+    try:
+        with open(path, 'r', encoding='utf-8') as f:
+            data = yaml.safe_load(f) or {}
+        return Settings(**data)
+    except Exception as e:
+        logger.error(f"Error loading config file: {e}. Using default settings.")
+        return Settings()
