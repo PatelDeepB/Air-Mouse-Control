@@ -16,7 +16,7 @@ First off, thank you for considering contributing to AirMouse++! It's people lik
 - Fork the repo and create your branch from `main`.
 - If you've added code that should be tested, add tests.
 - Ensure the test suite passes (`pytest tests/`).
-- Issue that pull request!
+- Issue that pull request!!
 
 ## Code Style Guide
 We follow strict, clean, standard Python formatting:
