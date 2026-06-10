@@ -24,7 +24,6 @@ class LinuxUInputManager:
         
         if platform.system() == "Linux" and os.environ.get("WAYLAND_DISPLAY"):
             try:
-                import evdev
                 from evdev import UInput, ecodes, AbsInfo
                 self.e = ecodes
                 
