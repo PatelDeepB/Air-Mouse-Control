@@ -1,5 +1,6 @@
 import pyautogui
 from airmouse.utils.logger import setup_logger
+from airmouse.actions.linux_uinput import uinput_manager
 
 logger = setup_logger("system_controller")
 
@@ -8,14 +9,23 @@ class SystemController:
 
     def volume_up(self, steps: int = 2) -> None:
         for _ in range(steps):
-            pyautogui.press('volumeup')
+            if uinput_manager.is_active:
+                uinput_manager.press_key(uinput_manager.e.KEY_VOLUMEUP)
+            else:
+                pyautogui.press('volumeup')
 
     def volume_down(self, steps: int = 2) -> None:
         for _ in range(steps):
-            pyautogui.press('volumedown')
+            if uinput_manager.is_active:
+                uinput_manager.press_key(uinput_manager.e.KEY_VOLUMEDOWN)
+            else:
+                pyautogui.press('volumedown')
 
     def volume_mute(self) -> None:
-        pyautogui.press('volumemute')
+        if uinput_manager.is_active:
+            uinput_manager.press_key(uinput_manager.e.KEY_MUTE)
+        else:
+            pyautogui.press('volumemute')
 
     def brightness_up(self) -> None:
         # Cross-platform brightness control often requires 3rd party packages

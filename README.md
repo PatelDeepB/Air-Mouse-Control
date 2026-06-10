@@ -46,6 +46,17 @@ git clone https://github.com/PatelDeepB/Air-Mouse-Control.git
 cd Air-Mouse-Control
 ```
 
+### Ubuntu / Linux Setup
+On Ubuntu, you will need to install system-level dependencies before `pip install` works correctly:
+```bash
+sudo apt-get update
+sudo apt-get install python3-tk python3-dev libgl1-mesa-glx libglib2.0-0
+```
+> [!IMPORTANT]
+> If you are running Ubuntu 22.04+ with the **Wayland** display server, AirMouse++ natively supports Wayland by injecting input directly into the Linux kernel using `evdev`. 
+> However, for security reasons, this means **you must run the application with sudo:**
+> `sudo airmouse start`
+
 **2. Install dependencies:**
 ```bash
 pip install -e .
@@ -104,7 +115,7 @@ Yes! AirMouse++ uses your standard webcam to track your hand joints in 3D space,
 AirMouse++ is designed to be the most robust Python virtual mouse. It uses a One Euro Filter to eliminate cursor shaking and Click Stabilization to ensure you don't accidentally move the mouse while clicking.
 
 **Does it work on Mac and Linux?**  
-Yes, it is fully cross-platform. It uses `pynput` and `pyautogui` which support Windows, macOS, and Linux out of the box.
+Yes, it is fully cross-platform. It uses `pynput` and `pyautogui` which support Windows, macOS, and X11 Linux out of the box. For modern Wayland Linux environments (like Ubuntu 22.04+), it uses native kernel-level `evdev` injection (requires `sudo`).
 
 ## 🤝 Contributing
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**. Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
