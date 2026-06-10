@@ -1,6 +1,5 @@
 import os
 import platform
-from typing import Any
 
 from airmouse.utils.logger import setup_logger
 
