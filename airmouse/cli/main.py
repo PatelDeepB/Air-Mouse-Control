@@ -1,5 +1,7 @@
 import argparse
 import sys
+import os
+import platform
 from airmouse.utils.logger import setup_logger
 
 logger = setup_logger("cli")
@@ -71,6 +73,13 @@ def main():
     if args.command is None:
         parser.print_help()
         sys.exit(1)
+
+    if platform.system() == "Linux" and os.environ.get("WAYLAND_DISPLAY"):
+        if os.geteuid() != 0:
+            logger.error("CRITICAL: Wayland display server detected.")
+            logger.error("To control the mouse natively on Wayland, you must run this application with sudo:")
+            logger.error("    sudo airmouse start")
+            sys.exit(1)
 
     args.func(args)
 
