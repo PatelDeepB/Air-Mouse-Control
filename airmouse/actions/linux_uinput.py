@@ -27,6 +27,13 @@ class LinuxUInputManager:
                 from evdev import UInput, ecodes, AbsInfo
                 self.e = ecodes
                 
+                try:
+                    import pyautogui
+                    sw, sh = pyautogui.size()
+                except Exception as ex:
+                    logger.warning(f"Could not fetch screen size for UInput (typical on Wayland). Using 1920x1080 fallback. Error: {ex}")
+                    sw, sh = 1920, 1080
+                
                 # Define capabilities for absolute mouse, buttons, and keys
                 cap = {
                     self.e.EV_KEY: [
@@ -38,8 +45,8 @@ class LinuxUInputManager:
                         self.e.KEY_F10
                     ],
                     self.e.EV_ABS: [
-                        (self.e.ABS_X, AbsInfo(value=0, min=0, max=1920, fuzz=0, flat=0, resolution=0)),
-                        (self.e.ABS_Y, AbsInfo(value=0, min=0, max=1080, fuzz=0, flat=0, resolution=0))
+                        (self.e.ABS_X, AbsInfo(value=0, min=0, max=sw, fuzz=0, flat=0, resolution=0)),
+                        (self.e.ABS_Y, AbsInfo(value=0, min=0, max=sh, fuzz=0, flat=0, resolution=0))
                     ],
                     self.e.EV_REL: [
                         self.e.REL_WHEEL
