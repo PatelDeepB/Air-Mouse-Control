@@ -54,8 +54,12 @@ sudo apt-get install python3-tk python3-dev libgl1-mesa-glx libglib2.0-0
 ```
 > [!IMPORTANT]
 > If you are running Ubuntu 22.04+ with the **Wayland** display server, AirMouse++ natively supports Wayland by injecting input directly into the Linux kernel using `evdev`. 
-> However, for security reasons, this means **you must run the application with sudo:**
-> `sudo airmouse start`
+> To enable this, you must install the dependency and run the application with sudo:
+> ```bash
+> pip install evdev
+> sudo airmouse start
+> ```
+> *(Note: The camera window runs headlessly when using sudo on Wayland).*
 
 **2. Install dependencies:**
 ```bash

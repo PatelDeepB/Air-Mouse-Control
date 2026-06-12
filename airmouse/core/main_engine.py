@@ -41,6 +41,15 @@ class MainEngine(BaseEngine):
 
     def _run_loop(self) -> None:
         prev_time = 0.0
+        headless_mode = False
+        
+        # Cache screen size to avoid calling pyautogui every frame (and handle Wayland crashes)
+        try:
+            import pyautogui
+            screen_width, screen_height = pyautogui.size()
+        except Exception as e:
+            logger.warning(f"Could not fetch screen size via pyautogui (typical on Wayland). Using 1920x1080 fallback. Error: {e}")
+            screen_width, screen_height = 1920, 1080
 
         while self._running:
             frame = self.camera.read_frame()
@@ -72,10 +81,6 @@ class MainEngine(BaseEngine):
                         # Some actions need coordinates (like mouse move)
                         # We use the index tip as the cursor coordinate.
                         index_tip = tracking_data["landmarks"][8]
-                        # Use pyautogui to get actual screen size
-                        import pyautogui
-                        screen_width, screen_height = pyautogui.size()
-                        
                         # Active area bounding box: only the middle area of the camera maps to the full screen.
                         margin_x = self.mapper.settings.camera.comfort_margin_x
                         margin_y = self.mapper.settings.camera.comfort_margin_y
@@ -124,11 +129,20 @@ class MainEngine(BaseEngine):
                         cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
             # Display the frame
-            cv2.imshow("AirMouse++", frame)
+            if not headless_mode:
+                try:
+                    cv2.imshow("AirMouse++", frame)
+                except cv2.error as e:
+                    logger.warning(f"Failed to show camera feed (running headlessly). Are you running sudo on Wayland? Error: {e}")
+                    headless_mode = True
 
             # Exit condition
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                self.stop()
+            if not headless_mode:
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    self.stop()
+            else:
+                # Headless mode relies on terminal Ctrl+C to exit.
+                time.sleep(0.01)
 
     def stop(self) -> None:
         logger.info("Stopping AirMouse++ Engine...")
