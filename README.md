@@ -110,6 +110,8 @@ def open_browser(**kwargs):
 ```
 Then map a gesture to `open_browser` in your `config.yaml`.
 
+Auto keyboard feature is coming soon...
+
 ## ❓ FAQ (Frequently Asked Questions)
 
 **Can I control my mouse with a webcam?**  
