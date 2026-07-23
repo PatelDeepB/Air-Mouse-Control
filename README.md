@@ -124,7 +124,7 @@ AirMouse++ is designed to be the most robust Python virtual mouse. It uses a One
 Yes, it is fully cross-platform. It uses `pynput` and `pyautogui` which support Windows, macOS, and X11 Linux out of the box. For modern Wayland Linux environments (like Ubuntu 22.04+), it uses native kernel-level `evdev` injection (requires `sudo`).
 
 ## 🤝 Contributing
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**. Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**. Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ## 🧪 Experimental: Custom ML Gestures
 We are currently actively developing the `airmouse train` CLI command. This feature will soon allow users to calculate joint angles and train highly robust custom ML models for personalized gestures. Stay tuned!
